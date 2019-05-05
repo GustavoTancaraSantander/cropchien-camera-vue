@@ -2,8 +2,9 @@
 import firebase from 'firebase/app'
 import 'firebase/firestore'
 import 'firebase/messaging'
+import 'firebase/storage'
 
-const firebaseConfig = {
+const config = {
     apiKey: "AIzaSyAxrIB30PZ3280REHkvhHuYuVY2woiq-sc",
     authDomain: "ias-pwa-dogfarm.firebaseapp.com",
     databaseURL: "https://ias-pwa-dogfarm.firebaseio.com",
@@ -13,7 +14,7 @@ const firebaseConfig = {
     appId: "1:612380112425:web:9294227c6cbb6a1c"
 };
 
-export const firebaseApp = firebase.initializeApp(firebaseConfig);
+export const firebaseApp = firebase.initializeApp(config);
 const db = firebaseApp.firestore();
 db.enablePersistence({experimentalTabSynchronization:true})
 

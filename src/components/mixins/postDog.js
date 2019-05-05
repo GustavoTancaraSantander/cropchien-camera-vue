@@ -13,7 +13,9 @@ export default (url, comment, author) => {
 		comment,
 		info: `Posted by ${author != ''? author : 'Unknow' } on ${days[d.getDay()]}`,
 		createdAt: new Date().getTime()
-	}).then(router.go(-1))
+	})
+	.then(router.push({ name: 'home'}))
+	//.then(router.go(-1))
 	
 	console.log("ADD ok");
 	

@@ -13,6 +13,9 @@
         <span class="font-weight-light">MATERIAL DESIGN</span>
       </v-toolbar-title> -->
       <v-spacer></v-spacer>
+      <v-btn icon v-if="$route.name == 'post'" @click="$router.push({name:'camera'})" >
+		  <v-icon>camera_alt</v-icon>
+      </v-btn>
    <!--    <v-btn
         flat
         href="https://github.com/vuetifyjs/vuetify/releases/latest"

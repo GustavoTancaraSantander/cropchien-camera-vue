@@ -1,6 +1,6 @@
 <template>
 	<v-container grid-list-xs>
-		<v-layout row wrap>
+		<v-layout >
 			<v-flex >
 				Post commin soon... {{key}}
 				<div id="spinner_container">
@@ -12,10 +12,11 @@
 						class="spinner"
 						:rotate="-90"
 					></v-progress-circular>
-				
 				</div>
+				
 				<img :src="this.dogURL">
-				<v-container grid-list-lg>
+				
+				<v-container  fluid style="min-height: 0" grid-list-lg>
 					<!-- https://vuetifyjs.com/en/framework/grid#layout-playground -->
 					<v-layout row wrap>
 						<v-flex xs12>
@@ -45,6 +46,12 @@
 import axios from 'axios';
 import postDog from './mixins/postDog.js'
 	export default {
+		props: {
+			pictureURL: {
+				type: String,
+				default: ''
+			},
+		},
 		data() {
 			return {
 				key: 'Post Wlcome',
@@ -52,16 +59,18 @@ import postDog from './mixins/postDog.js'
 				title: '',
 				author: '',
 				loading: true,
-				
-				// interval: {},
-        		// value: 20
 			}
 		},
-	/* 	beforeDestroy () {
-			clearInterval(this.interval)
-		}, */
+	
 		mounted () {
-			axios.get('https://dog.ceo/api/breed/appenzeller/images/random')
+			
+			if (this.pictureURL != '') { console.log('this.pictureURL =(STORAGE-FIREBASE)', this.pictureURL);
+			
+				this.dogURL = this.pictureURL
+				this.loading = false
+			} else {	console.log('this.pictureURL= (STORAGE-AXIOS)', this.pictureURL);
+			
+				axios.get('https://dog.ceo/api/breed/appenzeller/images/random')
 				.then(response => {
 					if (response.data.status) {
 						console.log(response.data.status); // ok
@@ -70,13 +79,10 @@ import postDog from './mixins/postDog.js'
 					} else {
 						console.log("erro Getting image");// fail		
 					}
-				})
-			/* this.interval = setInterval(() => {
-				if (this.value === 100) {
-					return (this.value = 0)
-				}
-				this.value += 20
-			}, 100)	 */
+				})	
+			}
+			
+		
 		},
 		methods: {
 			post() {

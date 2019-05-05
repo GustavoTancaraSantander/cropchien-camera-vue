@@ -2,7 +2,7 @@
 	<v-container grid-list-xs>
 		<v-layout row wrap>
 			<v-flex v-for="(dog, index) in dogs" :key="dog.id" xs12 md6 xl3 pa-3>
-				<v-card @click="$router.push({name: 'details', params: { id:dog.id, dog:dogs[index] }})">
+				<v-card @click="$router.push({name: 'details', params: { id:dog.id, dogProp:dogs[index] }})">
 					<v-img
 					height="170"
 					:src="dog.url"
@@ -34,7 +34,7 @@ import { firebaseApp } from "../configFirebase.js";
 		},
 		
         mounted() {
-            firebaseApp.firestore().collection('dogs').orderBy('createdAt')
+            firebaseApp.firestore().collection('dogs').orderBy('createdAt', 'desc')
                 .onSnapshot(snapshot => {
                     this.dogs = []
                     snapshot.forEach((dog) => {
