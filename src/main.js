@@ -4,9 +4,16 @@ import App from './App.vue'
 import router from './router'
 import './registerServiceWorker'
 
+import { firebaseApp } from "./configFirebase";
+
 Vue.config.productionTip = false
 
 new Vue({
   router,
-  render: h => h(App)
+  render: h => h(App),
+  
+  mounted () {
+    console.log('mounted FIREBASE', firebaseApp )  
+  }
+  
 }).$mount('#app')

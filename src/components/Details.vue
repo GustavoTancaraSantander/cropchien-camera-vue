@@ -1,6 +1,6 @@
 <template>
 	<v-container grid-list-xs>
-		<v-layout column>
+		<v-layout column v-if="!!dog">
 			<v-flex>
 				<v-img :src="dog.url"/>
 			</v-flex>
@@ -13,18 +13,40 @@
 </template>
 
 <script>
+import { firebaseApp } from '../configFirebase.js' 
 	export default {
 		props: {
-			dog: {
+			dogProp: {
 				type: Object,
-				required: true
+				//required: true
 			},
 		},
 		data() {
 			return {
-				
+				dog: undefined
 			}
 		},
+		mounted () {
+			if (!!this.dogProp) {
+				this.dog = this.dogProp
+			} else {
+				console.log('dogPROP >>>', this.dogProp); // undefined
+				
+				const id = this.$route.params.id // watch route
+				console.log('this.$route', id);
+				
+				firebaseApp.firestore().doc(`dogs/${id}`).get()
+					.then( doc => {
+						if (doc.exists) {
+							this.dog = doc.data()
+						} else {
+							console.error('Non such document! DETAILS.VUE');
+						}
+					}).catch(error => {
+						console.error("ERROR getting document:", error);
+					});
+			}
+		}
 	}
 </script>
 
