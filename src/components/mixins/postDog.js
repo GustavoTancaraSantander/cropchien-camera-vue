@@ -11,8 +11,9 @@ export default (url, comment, author) => {
 	firebaseApp.firestore().collection('dogs').add({
 		url,
 		comment,
-		info: `Posted by ${author != ''? author : 'Unknow' } on ${days[d.getDay()]}`,
-		createdAt: new Date().getTime()
+		info: `Posted by ${author != ''? author : 'Unknow' } on ${days[d.getDay()]} to ${d.getHours()}`,
+		createdAt: Date.now()
+		// createdAt: new Date().getTime()
 	})
 	.then(router.push({ name: 'home'}))
 	//.then(router.go(-1))

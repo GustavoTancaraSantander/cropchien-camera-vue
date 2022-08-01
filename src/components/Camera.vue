@@ -5,45 +5,77 @@
 		<v-btn  class="take-picture-button" color="pink" dark fab @click="capture" >
 			<v-icon v-show="!cameraClicked">camera</v-icon>
 		</v-btn>
+		<v-switch label="label" v-model="front"></v-switch>
+		<v-select
+			:items="items"
+			v-model="value"
+			label="label"
+		></v-select>
+		<PhotoCapture v-model="imageBase64" />
 	</div>
 </template>
 
 <script>
 import { firebaseApp } from '../configFirebase.js'
-import postDog from './mixins/postDog.js'
+//import postDog from './mixins/postDog.js'
+import 'vue-media-recorder/src/assets/scss/main.scss'
+import {PhotoCapture, VideoCapture} from 'vue-media-recorder'
 	export default {
+		components:{
+			PhotoCapture,
+			VideoCapture
+		},
 		data() {
 			return {
+				imageBase64: null,
+            videoUrl: null,
+				//////////
+				items: [],
+				value: null,
+				front: false,
 				mediaStream: null,
 				cameraClicked: false
 			}
 		},
 		mounted() {
+			navigator.mediaDevices.enumerateDevices()
+						.then((devices) => {
+						devices.forEach((device) => {
+							console.log(device.kind + ": " + device.label +
+											" id = " + device.deviceId);
+							this.items.push(device.kind+":"+ device.label)
+						});
+						})
+						.catch((err) => {
+						console.log(err.name + ": " + err.message);
+						});
 			if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-				navigator.mediaDevices.getUserMedia({video: true})
+				navigator.mediaDevices.getUserMedia({video: { facingMode:  "user"  }})
 					.then( mediaStream => {
 						this.mediaStream = mediaStream
 						this.$refs.video.srcObject = mediaStream
 						this.$refs.video.play()
 					})
-					.catch(err => console.error('getUserMedia() ERROR:', err))		
+					.catch(err => console.error('getUserMedia() ERROR:', err))
+					
+							
 			}
 			else if (navigator.getUserMedia) { // stardard
-				navigator.getUserMedia({ video: true }, (mediaStream) => {
+				navigator.getUserMedia({ video: { facingMode:  "user"  } }, (mediaStream) => {
 					this.mediaStream = mediaStream
 					this.$refs.video.srcObject = mediaStream
 					this.$refs.video.play()
 				}, errBack);	
 			}
 			else if (navigator.webkitGetUserMedia) {	// WebKit-prefixed
-				navigator.webkitGetUserMedia({ video: true }, function (mediaStream) {
+				navigator.webkitGetUserMedia({ video: { facingMode:  "user"  } }, function (mediaStream) {
 					this.mediaStream = mediaStream
 					this.$refs.video.srcObject = window.webkitURL.createObjectURL(mediaStream)
 					this.$refs.video.play()					
 				}, errBack);
 			}
 			else if (navigator.mozGetUserMedia) {	// Mozilla-prefixed
-				navigator.mozGetUserMedia({ video: true }, (mediaStream) =>{
+				navigator.mozGetUserMedia({ video: { facingMode:  "user"  } }, (mediaStream) =>{
 					this.mediaStream = mediaStream
 					this.$refs.video.srcObject = window.URL.createObjectURL(mediaStream)
 					this.$refs.video.play()					
